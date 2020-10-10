@@ -19,14 +19,43 @@
     </tbody>
 </table>
 
+<h2>Agencies</h2>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Headline</th>
+            <th scope="col">Source</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    </tbody>
+</table>
+
 <h2>Posts</h2>
-{% for post in posts %}
-    <div>
-        {{ post.content }}
-        {{ post.user }}
-        {{ post.created}}
-    </div>
-{% endfor %}
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Content</th>
+            <th scope="col">User</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for post in posts %}
+    <tr>
+       <td> {{ post.content }} </td>
+       <td> {{ post.user }} </td>
+       <td> {{ post.created}} </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% if user.is_authenticated %}
 <h2>Write</h2>
