@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Twitter</th>
+            <th scope="col">Facebook</th>
+            <th scope="col">Wikipedia</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ details.name }}</td>
+        <td> <a href="https://twitter.com/{{ details.twitter }}">{{ details.twitter }}</a></td>
+        <td> <a href="https://facebook.com/{{ details.facebook }}">{{ details.facebook }}</a> </td>
+        <td> <a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}">{{ details.wikipedia }}</a> </td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Posts</h2>
+{% for post in posts %}
+    <div>
+        {{ post.content }}
+        {{ post.user }}
+        {{ post.created}}
+    </div>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<h2>Write</h2>
+<form action="/posts/add/" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+    <label for="postContent">Post content</label>
+    {{ form.content }}
+    </div>
+    <input type="hidden" name="politician" value="{{ details.id }}" />
+    <input type="hidden" name="user" value="{{ user.id }} " />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+{% endblock %}
+
