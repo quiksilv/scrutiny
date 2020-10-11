@@ -31,7 +31,7 @@
     <tbody>
     {% for agency in agencies %}
     <tr>
-        <td>{{ agency.headline }}</td>
+        <td><a href="{{ agency.link }}">{{ agency.headline }}</a></td>
         <td>{{ agency.source }}</td>
         <td>{{ agency.created }}</td>
     </tr>
