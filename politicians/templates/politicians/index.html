@@ -14,7 +14,8 @@
     <tbody>
     {% for result in results %}
     <tr>
-        <td>{{ result.name }}</td>
+        {% load utils %}
+        <td>{{ result.name | human_readable }}</td>
         <td> <a href="https://twitter.com/{{ result.twitter }}">{{ result.twitter }}</a></td>
         <td> <a href="https://facebook.com/{{ result.facebook }}">{{ result.facebook }}</a> </td>
         <td> <a href="https://en.wikipedia.org/wiki/{{ result.wikipedia }}">{{ result.wikipedia }}</a> </td>

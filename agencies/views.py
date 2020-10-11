@@ -32,11 +32,12 @@ def aggregator(request):
         source = Source.objects.filter(name=source_name)
         politicians = Politician.objects.filter().values('id', 'name')
         for politician in politicians:
+            politician_name = politician['name'].replace('_', ' ')
             for entry in feed.entries:
                 #entry.title, description, published, link, guid
                 entry.published = parser.parse(str(entry.published) )
                 if source_name == "freemalaysiatoday" or source_name == "theborneopost":
-                    if politician['name'] in entry.title or politician['name'] in entry.description or politician['name'] in entry.content[0].value:
+                    if politician_name in entry.title or politician_name in entry.description or politician_name in entry.content[0].value:
                         #check if already added
                         entry.guid = entry.guid.split("=")[1]
                         if Agency.objects.filter(source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
@@ -45,7 +46,7 @@ def aggregator(request):
                         agency.save()
                         agency.politician.add(Politician.objects.get(id=politician['id']) )
                 else:
-                    if politician['name'] in entry.title or politician['name'] in entry.description:
+                    if politician_name in entry.title or politician_name in entry.description:
                         #check if already added
                         if Agency.objects.filter(source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
                             continue

@@ -11,7 +11,8 @@
     </thead>
     <tbody>
     <tr>
-        <td>{{ details.name }}</td>
+        {% load utils %}
+        <td>{{ details.name | human_readable }}</td>
         <td> <a href="https://twitter.com/{{ details.twitter }}">{{ details.twitter }}</a></td>
         <td> <a href="https://facebook.com/{{ details.facebook }}">{{ details.facebook }}</a> </td>
         <td> <a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}">{{ details.wikipedia }}</a> </td>
