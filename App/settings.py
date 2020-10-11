@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'vt+#dv$s8ve379mqqae0(u&_hu@@e91%^#yprp0-n&5tb+#6s*'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'dev.squarepotato.com'
+]
 
 
 # Application definition
@@ -124,9 +126,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mark.quiksilver@gmail.com'
-EMAIL_HOST_PASSWORD = 'qmd2283ABC!@#123'
-EMAIL_PORT = 587
+EMAIL_HOST = 'server250.web-hosting.com'
+EMAIL_HOST_USER = 'no-reply@squarepotato.com'
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_PORT = 465
 
 LOGIN_REDIRECT_URL = '/'

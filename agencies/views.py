@@ -54,4 +54,3 @@ def aggregator(request):
                         agency.save()
                         agency.politician.add(Politician.objects.get(id=politician['id']) )
     return render(request, 'agencies/aggregator.html', {'statuses': statuses} )
-                    
