@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from dateutil import parser
 
 from politicians.models import Politician
 from agencies.models import Agency, Source
@@ -14,7 +15,6 @@ def aggregator(request):
     for source_name in sources:
         if source_name == "thestar":
             url = "https://thestar.com.my/rss/News/Nation"
-            #url = "thestar.rss"
         if source_name == "malaysiakini":
             url = "https://www.malaysiakini.com/rss/en/news.rss"
         if source_name == "freemalaysiatoday":
@@ -34,6 +34,7 @@ def aggregator(request):
         for politician in politicians:
             for entry in feed.entries:
                 #entry.title, description, published, link, guid
+                entry.published = parser.parse(str(entry.published) )
                 if source_name == "freemalaysiatoday" or source_name == "theborneopost":
                     if politician['name'] in entry.title or politician['name'] in entry.description or politician['name'] in entry.content[0].value:
                         #check if already added

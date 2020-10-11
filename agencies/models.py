@@ -10,7 +10,7 @@ class Source(models.Model):
 class Agency(models.Model):
     headline = models.TextField(default="")
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
-    published = models.CharField(max_length=100)
+    published = models.DateTimeField()
     link = models.TextField(default="")
     guid = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now=True)
