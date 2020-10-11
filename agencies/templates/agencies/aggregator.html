@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for status in statuses %}
+<p>source: {{ status.source}}</p>
+<p>HTTP status: {{ status.status }}</p>
+<p>Debug message: {{ status.debug }}</p>
+<p>Modified: {{ status.modified }}</p>
+{% endfor %}
+{% endblock %}
+

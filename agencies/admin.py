@@ -3,7 +3,7 @@ from .models import Agency, Source
 
 # Register your models here.
 class AgencyAdmin(admin.ModelAdmin):
-    list_display = ('headline', 'source', 'created')
+    list_display = ('headline', 'source', 'guid', 'published')
     date_hierarchy = 'created'
 
 admin.site.register(Agency, AgencyAdmin)
