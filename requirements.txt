@@ -1,0 +1,13 @@
+asgiref==3.2.10
+certifi==2019.11.28
+chardet==3.0.4
+Django==3.1.2
+feedparser==6.0.1
+idna==2.8
+pytz==2020.1
+requests==2.22.0
+sgmllib3k==1.0.0
+six==1.15.0
+sqlparse==0.3.1
+urllib3==1.25.7
+virtualenv==16.7.9
