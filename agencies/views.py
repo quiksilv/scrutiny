@@ -27,6 +27,9 @@ def scrap(request):
             for listing in listings:
                 titlediv = listing.find_all('div')[1]
                 obj = titlediv.find('a')
+                #TODO: Handle case when there is no div on element[0] which is an image div
+                if obj is None:
+                    continue
                 title = obj.get_text()
                 link = obj['href']
                 description = listing.find_all('div')[3].get_text()
