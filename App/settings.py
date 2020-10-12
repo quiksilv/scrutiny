@@ -127,8 +127,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'server250.web-hosting.com'
-EMAIL_HOST_USER = 'no-reply@squarepotato.com'
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 465
 
