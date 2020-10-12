@@ -4,10 +4,48 @@ from dateutil import parser
 
 from politicians.models import Politician
 from agencies.models import Agency, Source
+
+from bs4 import BeautifulSoup
 import feedparser
 import ssl
+import requests
 
-# Create your views here.
+@user_passes_test(lambda u: u.is_superuser)
+def scrap(request):
+    origins = {"sinchew": "https://www.sinchew.com.my/column/node_7075.html"}
+    for origin in origins:
+        results = {}
+        url = origins[origin]
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, features="html.parser")
+        articles = soup.find('div', {'id' : 'articlenum'})
+        listings = articles.find_all('li', {'class' : 'listing'})
+
+        source = Source.objects.filter(name=origin)
+        politicians = Politician.objects.filter().values('id', 'othername')
+        for politician in politicians:
+            for listing in listings:
+                titlediv = listing.find_all('div')[1]
+                obj = titlediv.find('a')
+                title = obj.get_text()
+                link = obj['href']
+                description = listing.find_all('div')[3].get_text()
+                time = listing.find('div', {'id' : 'time'}).get_text()
+                article_id = link.split('_')[1][:-5]
+    
+                #print(title, link, description, time, article_id)
+                time = parser.parse(time)
+                if politician['othername'] != "" and (politician['othername'] in title or politician['othername'] in description):
+                    if Agency.objects.filter(politician=Politician.objects.get(othername=politician['othername']), source=Source.objects.get(name=origin), guid=article_id).count() > 0:
+                        continue
+                    agency = Agency.objects.create(headline=title, source=Source.objects.get(name=origin), published=time, link=link, guid=article_id)
+                    agency.save()
+                    agency.politician.add(Politician.objects.get(id=politician['id']) )
+                #TODO: parse for politician name in the next content page
+                results[article_id] = link
+        
+    return render(request, 'agencies/scrap.html', {"results" : results })
+        
 @user_passes_test(lambda u: u.is_superuser)
 def aggregator(request):
     statuses = []
@@ -39,8 +77,9 @@ def aggregator(request):
                 if source_name == "freemalaysiatoday" or source_name == "theborneopost":
                     if politician_name in entry.title or politician_name in entry.description or politician_name in entry.content[0].value:
                         #check if already added
-                        entry.guid = entry.guid.split("=")[1]
-                        if Agency.objects.filter(source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
+                        if "https://" in entry.guid:
+                            entry.guid = entry.guid.split("=")[1]
+                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
                             continue
                         agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(name=source_name), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()
@@ -48,7 +87,7 @@ def aggregator(request):
                 else:
                     if politician_name in entry.title or politician_name in entry.description:
                         #check if already added
-                        if Agency.objects.filter(source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
+                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
                             continue
                         agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(name=source_name), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()

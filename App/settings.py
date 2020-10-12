@@ -27,7 +27,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'dev.squarepotato.com'
+    '127.0.0.1',
+    'dev.squarepotato.com',
 ]
 
 
