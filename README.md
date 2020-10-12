@@ -1,3 +1,3 @@
-# Political-Accountability
+# Scrutiny
 
-[![Build Status](https://travis-ci.com/quiksilv/political-accountability.svg?branch=master)](https://travis-ci.com/quiksilv/political-accountability)
+[![Build Status](https://travis-ci.org/quiksilv/scrutiny.svg?branch=master)](https://travis-ci.org/quiksilv/scrutiny)
