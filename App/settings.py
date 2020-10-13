@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'politicians',
     'posts',
     'agencies',
+    'hansards',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,6 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 465
 
 LOGIN_REDIRECT_URL = '/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

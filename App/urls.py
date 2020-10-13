@@ -22,5 +22,6 @@ urlpatterns = [
     path('politicians/', include('politicians.urls') ),
     path('posts/', include('posts.urls') ),
     path('agencies/', include('agencies.urls') ),
+    path('hansards/', include('hansards.urls') ),
     path('', include('django.contrib.auth.urls') ),
 ]

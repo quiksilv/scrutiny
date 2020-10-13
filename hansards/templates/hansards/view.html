@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2> {{ hansard.name }} </h2>
+<h2> {{ hansard.created }} </h2>
+{% for paragraph in paragraphs %}
+    <div>
+        <span class="badge badge-secondary">Page {{ paragraph.page }} </span>
+        <span class="badge badge-primary"> {{ paragraph.politician }} </span>
+        <p> {{ paragraph.content }} </p>
+    </div>
+{% endfor %}
+{% endblock %}

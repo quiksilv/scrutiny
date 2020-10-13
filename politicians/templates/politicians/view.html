@@ -60,6 +60,24 @@
     </tbody>
 </table>
 
+<h2>Hansards</h2>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for hansard in hansards %}
+    <tr>
+       <td> <a href="/hansards/view/{{ hansard.name }}">{{ hansard.name}}</a> </td>
+       <td> {{ hansard.created}} </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% if user.is_authenticated %}
 <h2>Write</h2>
 <form action="/posts/add/" method="post">
