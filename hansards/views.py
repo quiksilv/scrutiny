@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
 from django.conf import settings
 from .models import Hansard, Paragraph
 from politicians.models import Politician
