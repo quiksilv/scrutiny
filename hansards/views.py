@@ -37,7 +37,7 @@ def getparagraphs(lines):
     return paragraphs
 def getactors(paragraphs, actor):
     prev_actor = actor
-    titles = ['YB', 'Dato', 'Datuk', 'Amar', 'Sri', 'Dr', 'Tuan', 'Puan', 'Anak', 'Hj', 'Haji', 'Hajah', 'Bin', 'Binti']
+    titles = ['YB', 'Dato', 'Datuk', 'Amar', 'Tan', 'Sri', 'Dr', 'Tuan', 'Puan', 'Anak', 'Hj', 'Haji', 'Hajah', 'Bin', 'Binti', 'Encik', 'Cik']
     results = {}
     for i, paragraph in enumerate(paragraphs):
         if ":" in paragraph:
@@ -64,12 +64,14 @@ def getactors(paragraphs, actor):
                 results[i] = actor
     return actor, results
     
+@user_passes_test(lambda u: u.is_superuser)
 def process(request):
     output_string = StringIO()
     elements = []
     results = {}
     actors = {}
-    with open(os.path.join(settings.MEDIA_ROOT, 'hansards/sample.pdf'), 'rb') as in_file:
+    #TODO:Process on upload
+    with open(os.path.join(settings.MEDIA_ROOT, 'hansards/sample2.pdf'), 'rb') as in_file:
         parser = PDFParser(in_file)
         doc = PDFDocument(parser)
         rsrcmgr = PDFResourceManager()
@@ -82,7 +84,7 @@ def process(request):
             page_text = output_string.read()
             elements.append(page_text)
     
-    hansard = Hansard.objects.get(id=2)
+    hansard = Hansard.objects.get(id=3)
     #keep track of actor from the beginning
     actor = ""
     for page, element in enumerate(elements):
