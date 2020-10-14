@@ -187,7 +187,7 @@ class Command(BaseCommand):
             {'name':'Wilson_Nyabong_Ijang'                  , 'firstname':'Wilson Nyabong'  , 'lastname':'Ijang', 'othername':'', 'constituency':'Pelagus', 'portfolio':''},
             {'name':'Ambrose_Blikau_Enturan'                , 'firstname':'Ambrose Blikau'  , 'lastname':'Enturan', 'othername':'', 'constituency':'Katibas', 'portfolio':''},
             {'name':'Jefferson_Jamit_Unyat'                 , 'firstname':'Jefferson Jamit' , 'lastname':'Unyat', 'othername':'', 'constituency':'Bukit Goram', 'portfolio':''},
-            {'name':'James_Jemut_Masing'                    , 'firstname':'james Jemut'     , 'lastname':'Masing', 'othername':'', 'constituency':'Baleh', 'portfolio':['Deputy Chief Minister', 'Minister of Infrastructural and Ports Development']},
+            {'name':'James_Jemut_Masing'                    , 'firstname':'James Jemut'     , 'lastname':'Masing', 'othername':'', 'constituency':'Baleh', 'portfolio':['Deputy Chief Minister', 'Minister of Infrastructural and Ports Development']},
             {'name':'Liwan_Lagang'                          , 'firstname':'Liwan'           , 'lastname':'Lagang', 'othername':'', 'constituency':'Belaga', 'portfolio':''},
             {'name':'Chukpai_Ugon'                          , 'firstname':'Chukpai'         , 'lastname':'Ugon', 'othername':'', 'constituency':'Murum', 'portfolio':''},
             {'name':'Talib_Zulpilip'                        , 'firstname':'Talib'           , 'lastname':'Zulpilip', 'othername':'', 'constituency':'Jepak', 'portfolio':['Minister in the Chief Minister\'s Office']},

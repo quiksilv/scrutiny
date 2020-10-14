@@ -38,7 +38,7 @@ def getparagraphs(lines):
     return paragraphs
 def getactors(paragraphs, actor):
     prev_actor = actor
-    titles = ['YB', 'Datuk Patinggi', 'Dato', 'Datuk', 'Amar', 'Tan', 'Sri', 'Dr', 'Tuan', 'Puan', 'Anak', 'Haji', 'Hj', 'Haji', 'Hajah', 'Bin', 'Binti', 'Encik', 'Cik', 'Ir', 'Prof.', 'Dr']
+    titles = ['YB', 'Amar', 'Patinggi', 'Dato', 'Datuk', 'Amar', 'Tan', 'Sri', 'Dr', 'Tuan', 'Puan', 'Anak', 'Haji', 'Hj', 'Haji', 'Hajah', 'Bin', 'Binti', 'Encik', 'Cik', 'Ir', 'Prof.', 'Dr']
     results = {}
     for i, paragraph in enumerate(paragraphs):
         if ":" in paragraph:
@@ -55,9 +55,10 @@ def getactors(paragraphs, actor):
             #maybe I need to complete the DB and check for names
             if '(' in actor and ')' in actor:
                 actor = actor[actor.find("(")+1:actor.find(")")]
+            actor = actor.replace('(', '').replace(')', '')
             for title in titles:
                 actor = actor.replace(title, '').replace('  ', ' ').strip()
-            if 'Timbalan' in actor or 'Speaker' in actor:
+            if 'Timbalan Speaker' in actor or 'Speaker' in actor or 'Tuan Speaker' in actor or 'Tuan Pengerusi' in actor:
                 actor = "unknown"
             results[i] = actor
         else:
@@ -97,6 +98,7 @@ def process(request):
             politician = None
             if line in actors.keys():
                 name = actors[line].replace(' ', '_')
+                print(name)
                 if Politician.objects.filter(name=name).count() == 1:
                     politician = Politician.objects.get(name=name)
             Paragraph.objects.get_or_create(page=page, line=line, content=para, politician=politician, hansard=hansard)
