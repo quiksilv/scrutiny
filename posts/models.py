@@ -11,7 +11,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     POST_STATUS = (('pending', 'pending'), ('suspended', 'suspended'), ('active', 'active'), ('deleted', 'deleted') )
-    content = models.TextField(default="")
+    content = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=POST_STATUS, default="active")
     parent = models.IntegerField(default=0)
     modified = models.DateTimeField(auto_now=True)
