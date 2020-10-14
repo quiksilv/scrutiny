@@ -52,47 +52,42 @@ def scrap(request):
 @user_passes_test(lambda u: u.is_superuser)
 def aggregator(request):
     statuses = []
-    sources = ["thestar", "malaysiakini", "freemalaysiatoday", "theborneopost"]
-    for source_name in sources:
-        if source_name == "thestar":
-            url = "https://thestar.com.my/rss/News/Nation"
-        if source_name == "malaysiakini":
-            url = "https://www.malaysiakini.com/rss/en/news.rss"
-        if source_name == "freemalaysiatoday":
-            url = "https://www.freemalaysiatoday.com/rss"
-        if source_name == "theborneopost":
-            url = "https://www.theborneopost.com/rss"
+    sources = Source.objects.all().values('id', 'name', 'rss')
+    for source in sources:
+        rss = source['rss']
         if hasattr(ssl, '_create_unverified_context'):
             ssl._create_default_https_context = ssl._create_unverified_context
-        feed = feedparser.parse(url)
+        feed = feedparser.parse(rss)
         last_etag = feed.get('etag', '')
         last_modified = feed.get('modified', '')
-        NewsFeed = feedparser.parse(url, etag=last_etag, modified=last_modified)
-        statuses.append( {'source': source_name, 'status': NewsFeed.get('status'), 'debug': NewsFeed.get('debug_message'), 'modified': NewsFeed.get('modified') } )
+        NewsFeed = feedparser.parse(rss, etag=last_etag, modified=last_modified)
+        statuses.append( {'source': rss, 'status': NewsFeed.get('status'), 'debug': NewsFeed.get('debug_message'), 'modified': NewsFeed.get('modified') } )
     
-        source = Source.objects.filter(name=source_name)
         politicians = Politician.objects.filter().values('id', 'name')
         for politician in politicians:
             politician_name = politician['name'].replace('_', ' ')
             for entry in feed.entries:
                 #entry.title, description, published, link, guid
                 entry.published = parser.parse(str(entry.published) )
-                if source_name == "freemalaysiatoday" or source_name == "theborneopost":
+                if source['name'] == "freemalaysiatoday" or source['name'] == "theborneopost" or source['name'] == "malaymail":
                     if politician_name in entry.title or politician_name in entry.description or politician_name in entry.content[0].value:
                         #check if already added
-                        if "https://" in entry.guid:
-                            entry.guid = entry.guid.split("=")[1]
-                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
+                        if source['name'] == "malaymail":
+                            entry.guid = entry.guid.split("/")[-1]
+                        else:
+                            if "https://" in entry.guid:
+                                entry.guid = entry.guid.split("=")[1]
+                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                             continue
-                        agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(name=source_name), published=entry.published, link=entry.link, guid=entry.guid)
+                        agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()
                         agency.politician.add(Politician.objects.get(id=politician['id']) )
                 else:
                     if politician_name in entry.title or politician_name in entry.description:
                         #check if already added
-                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source_name), guid=entry.guid).count() > 0:
+                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                             continue
-                        agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(name=source_name), published=entry.published, link=entry.link, guid=entry.guid)
+                        agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()
                         agency.politician.add(Politician.objects.get(id=politician['id']) )
     return render(request, 'agencies/aggregator.html', {'statuses': statuses} )

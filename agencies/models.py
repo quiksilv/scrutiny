@@ -4,6 +4,7 @@ from politicians.models import Politician
 # Create your models here.
 class Source(models.Model):
     name = models.CharField(max_length=255)
+    rss = models.TextField()
     def __str__(self):
         return self.name
 
