@@ -77,7 +77,7 @@ def aggregator(request):
                         else:
                             if "https://" in entry.guid:
                                 entry.guid = entry.guid.split("=")[1]
-                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
+                        if Agency.objects.filter(headline=entry.title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                             continue
                         agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()
@@ -85,7 +85,7 @@ def aggregator(request):
                 else:
                     if politician_name in entry.title or politician_name in entry.description:
                         #check if already added
-                        if Agency.objects.filter(politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
+                        if Agency.objects.filter(headline=entry.title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                             continue
                         agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, guid=entry.guid)
                         agency.save()
