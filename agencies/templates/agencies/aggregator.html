@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 {% for status in statuses %}
+<div {% if status.source == "200" %} class="alert alert-success" {% else %} class="alert alert-warning" {% endif %} role="alert">
 <p>source: {{ status.source}}</p>
 <p>HTTP status: {{ status.status }}</p>
 <p>Debug message: {{ status.debug }}</p>
 <p>Modified: {{ status.modified }}</p>
+</div>
 {% endfor %}
 {% endblock %}
 
