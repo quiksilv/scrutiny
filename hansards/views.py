@@ -37,28 +37,22 @@ def getparagraphs(lines):
     paragraphs = list(filter(None, paragraphs) )
     return paragraphs
 def getactors(paragraphs, actor):
-    prev_actor = actor
+    politicians = Politician.objects.filter().values('name')
     titles = ['YB', 'Amar', 'Patinggi', 'Dato', 'Datuk', 'Amar', 'Tan', 'Sri', 'Dr', 'Tuan', 'Puan', 'Anak', 'Haji', 'Hj', 'Haji', 'Hajah', 'Bin', 'Binti', 'Encik', 'Cik', 'Ir', 'Prof.', 'Dr']
+    others = ['Timbalan Speaker', 'Speaker', 'Tuan Pengerusi']
     results = {}
     for i, paragraph in enumerate(paragraphs):
         if ":" in paragraph:
             actor = paragraph.split(":")[0].replace('  ', ' ')
-            # just checking for colon fails easily, supplementing with a titles string check, although may fail
-            # also checks to see if the colon tells us its preceeding a list
-            if all(not title in actor for title in titles) or paragraph.split(":")[1].isspace():
-                continue
-            #check if is true actor, not part of time HH:MM:SS
-            if all(not x.isalpha() and not x.isspace() for x in actor):
-                continue
-            #remove substrings regarding ministerial position, titles, etc.
-            #TODO:Bug when parenthesis and colon exist but not a valid actor,
-            #maybe I need to complete the DB and check for names
-            if '(' in actor and ')' in actor:
-                actor = actor[actor.find("(")+1:actor.find(")")]
-            actor = actor.replace('(', '').replace(')', '')
             for title in titles:
                 actor = actor.replace(title, '').replace('  ', ' ').strip()
-            if 'Timbalan Speaker' in actor or 'Speaker' in actor or 'Tuan Speaker' in actor or 'Tuan Pengerusi' in actor:
+            have_actor = False
+            for politician in politicians:
+                if politician['name'].replace('_', ' ') in actor:
+                    actor = politician['name'].replace('_', ' ')
+                    have_actor = True
+                    break
+            if not have_actor:
                 actor = "unknown"
             results[i] = actor
         else:
@@ -98,7 +92,6 @@ def process(request):
             politician = None
             if line in actors.keys():
                 name = actors[line].replace(' ', '_')
-                print(name)
                 if Politician.objects.filter(name=name).count() == 1:
                     politician = Politician.objects.get(name=name)
             Paragraph.objects.get_or_create(page=page, line=line, content=para, politician=politician, hansard=hansard)
