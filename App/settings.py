@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'posts',
     'agencies',
     'hansards',
+    'visualizations',
 ]
 
 MIDDLEWARE = [
