@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from django.db.models import Q
-from politicians.models import Politician
+from politicians.models import Politician, Constituency, Portfolio
 from politicians.forms import PoliticianForm
 from posts.models import Post
 from posts.forms import PostForm
@@ -10,11 +10,13 @@ from agencies.models import Agency
 from hansards.models import Hansard, Paragraph
 
 def index(request):
-    results = Politician.objects.all()
+    results = Constituency.objects.select_related().all()
     return render(request, 'politicians/index.html', {'results': results} )
 def search(request):
     term = request.GET.get('term')
-    results = Politician.objects.filter(Q(name__contains=term) )
+    #search by name
+    politicians = Politician.objects.filter(Q(name__contains=term) ).values_list('id', flat=True)
+    results = Constituency.objects.select_related().filter(politician__in=politicians )
     return render(request, 'politicians/index.html', {'results': results} )
 def view(request, name):
     form = PostForm()
