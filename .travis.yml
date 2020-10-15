@@ -8,5 +8,6 @@ script:
   - python manage.py makemigrations agencies hansards politicians posts
   - python manage.py migrate
   - python manage.py sources_initialise
-  - python manage.py politicians_initialise
+  - python manage.py initialise --state sarawak
+  - python manage.py initialise --state federal
   - python manage.py test
