@@ -1,29 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="row">
+    <div class="col-md-2">
+        <img src="{{ details.image_url }}" width="100%" />
+    </div>
+    <div class="col-md-8">
+        {% load utils %}
+        <div> <h2>{{ details.name | human_readable }}</h2> </div>
+        <div> {{ details.highest_education }} </div>
+        <div> <a href="https://facebook.com/{{ details.facebook }}">{{ details.facebook }}</a> </div>
+        <div> <a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}">{{ details.wikipedia }}</a> </div>
+    </div>
+    <div class="col-md-2">
+        {{ details.performance_plot | safe }}
+    </div>
+</div>
+<a class="twitter-timeline" href="https://twitter.com/{{ details.twitter }}" data-tweet-limit="1">Tweets by {{ details.twitter }}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<h2>Agencies</h2>
+
 {{ details.figure | safe }}
 
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Twitter</th>
-            <th scope="col">Facebook</th>
-            <th scope="col">Wikipedia</th>
-        </tr>
-    </thead>
-    <tbody>
-    <tr>
-        {% load utils %}
-        <td>{{ details.name | human_readable }}</td>
-        <td> <a href="https://twitter.com/{{ details.twitter }}">{{ details.twitter }}</a></td>
-        <td> <a href="https://facebook.com/{{ details.facebook }}">{{ details.facebook }}</a> </td>
-        <td> <a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}">{{ details.wikipedia }}</a> </td>
-    </tr>
-    </tbody>
-</table>
-
-<h2>Agencies</h2>
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
@@ -35,8 +32,12 @@
     <tbody>
     {% for agency in agencies %}
     <tr>
-        <td><a href="{{ agency.link }}">{{ agency.headline }}</a></td>
-        <td>{{ agency.source }}</td>
+        <td>
+            <img src="{{ agency.first_image_url }}" width="30%" />
+            <a href="{{ agency.link }}">{{ agency.headline }}</a>
+        </td>
+        {% load static %}
+        <td><img src="{% get_media_prefix %}logos/{{ agency.source}}.png" width="50px"/></td>
         <td>{{ agency.published }}</td>
     </tr>
     {% endfor %}

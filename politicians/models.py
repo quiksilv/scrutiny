@@ -19,6 +19,7 @@ class Politician(models.Model):
     lastname = models.CharField(max_length=255)
     othername = models.CharField(max_length=255, blank=True)
     image_url = models.TextField(blank=True)
+    highest_education = models.CharField(max_length=255, blank=True)
     twitter = models.CharField(max_length=255, blank=True)
     facebook = models.CharField(max_length=255, blank=True)
     wikipedia = models.CharField(max_length=255, blank=True)

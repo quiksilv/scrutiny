@@ -9,19 +9,35 @@ from politicians.models import Politician
 # Create your views here.
 #def mentions(request, p_id):
 class Visualization:
+    def barchart(p_id):
+        data = [60, 30, 80]
+        labels = ['Exp', 'Pop', 'Act']
+        ind = range(1, len(labels) + 1)
+        fig, ax = plt.subplots(figsize=(2, 2) )
+        ax.bar(ind, data, label='Attributes')
+        ax.set_ylabel('%')
+        ax.set_xticks(ind)
+        ax.set_xticklabels(labels)
+
+        html_fig = mpld3.fig_to_html(fig)
+        plt.close(fig)
+        return html_fig
     def mentions(p_id):
         xdata = []
         ydata = []
         agencies = Agency.objects.filter(Q(politician=p_id) ).values_list('published', flat=True)
-        for published in agencies:
-            xdata.append(published)
+        for agency in agencies:
+            xdata.append(agency)
             ydata.append(1)
-        fig, ax = plt.subplots(figsize=(4, 4) )
-        ax.plot(xdata, ydata, marker="o")
+        fig, ax = plt.subplots(figsize=(6, 3) )
+        mformat = mdates.DateFormatter('%d')
+        ax.xaxis.set_major_formatter(mformat)
+        ax.plot_date(xdata, ydata, marker="o")
     
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d') )
-        ax.set_xlabel('date', fontsize=20)
-        ax.set_ylabel('counts', fontsize=20)
+        ax.set_xlabel('Date', fontsize=20)
+        ax.set_ylabel('Count', fontsize=20)
+
+        ax.yaxis.set_ticks([])
     
         html_fig = mpld3.fig_to_html(fig)
         plt.close(fig)

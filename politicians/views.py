@@ -22,13 +22,16 @@ def search(request):
 def view(request, name):
     details = {}
     form = PostForm()
-    objs = Politician.objects.filter(name=name).values('id', 'name', 'twitter', 'facebook', 'wikipedia')
+    objs = Politician.objects.filter(name=name).values('id', 'name', 'image_url', 'highest_education', 'twitter', 'facebook', 'wikipedia')
     details['id'] = objs[0]['id']
     details['name'] = objs[0]['name']
+    details['image_url'] = objs[0]['image_url']
+    details['highest_education'] = objs[0]['highest_education']
     details['twitter'] = objs[0]['twitter']
     details['facebook'] = objs[0]['facebook']
     details['wikipedia'] = objs[0]['wikipedia']
     details['figure'] = Visualization.mentions(objs[0]['id'])
+    details['performance_plot'] = Visualization.barchart(objs[0]['id'])
     
     posts = Post.objects.filter(Q(politician__name__contains=name) ).order_by('-created')
     agencies = Agency.objects.filter(Q(politician__name=name) ).order_by('-created')
