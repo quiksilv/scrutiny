@@ -8,6 +8,8 @@ from posts.forms import PostForm
 from agencies.models import Agency
 from hansards.models import Hansard, Paragraph
 
+from visualizations.views import Visualization
+
 def index(request):
     results = Constituency.objects.select_related().all()
     return render(request, 'politicians/index.html', {'results': results} )
@@ -18,8 +20,16 @@ def search(request):
     results = Constituency.objects.select_related().filter(politician__in=politicians )
     return render(request, 'politicians/index.html', {'results': results} )
 def view(request, name):
+    details = {}
     form = PostForm()
-    details = Politician.objects.filter(name=name).get()
+    objs = Politician.objects.filter(name=name).values('id', 'name', 'twitter', 'facebook', 'wikipedia')
+    details['id'] = objs[0]['id']
+    details['name'] = objs[0]['name']
+    details['twitter'] = objs[0]['twitter']
+    details['facebook'] = objs[0]['facebook']
+    details['wikipedia'] = objs[0]['wikipedia']
+    details['figure'] = Visualization.mentions(objs[0]['id'])
+    
     posts = Post.objects.filter(Q(politician__name__contains=name) ).order_by('-created')
     agencies = Agency.objects.filter(Q(politician__name=name) ).order_by('-created')
     hansards = []
@@ -28,4 +38,5 @@ def view(request, name):
         hansard_id = paragraph['hansard']
         hansard = Hansard.objects.get(id=hansard_id)
         hansards.append(hansard)
+
     return render(request, 'politicians/view.html', {'form': form, 'details': details, 'agencies': agencies, 'posts': posts, 'hansards': hansards})

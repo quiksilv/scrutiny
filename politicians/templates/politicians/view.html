@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+
+{{ details.figure | safe }}
+
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
@@ -34,7 +37,7 @@
     <tr>
         <td><a href="{{ agency.link }}">{{ agency.headline }}</a></td>
         <td>{{ agency.source }}</td>
-        <td>{{ agency.created }}</td>
+        <td>{{ agency.published }}</td>
     </tr>
     {% endfor %}
     </tbody>
