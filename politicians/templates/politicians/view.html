@@ -19,30 +19,20 @@
 <a class="twitter-timeline" href="https://twitter.com/{{ details.twitter }}" data-tweet-limit="1">Tweets by {{ details.twitter }}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 <h2>Agencies</h2>
 
-{{ details.figure | safe }}
+<div class="py-3"> {{ details.figure | safe }} </div>
 
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Headline</th>
-            <th scope="col">Source</th>
-            <th scope="col">Created</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for agency in agencies %}
-    <tr>
-        <td>
-            <img src="{{ agency.first_image_url }}" width="30%" />
-            <a href="{{ agency.link }}">{{ agency.headline }}</a>
-        </td>
-        {% load static %}
-        <td><img src="{% get_media_prefix %}logos/{{ agency.source}}.png" width="50px"/></td>
-        <td>{{ agency.published }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<ul class="list-unstyled">
+{% for agency in agencies %}
+<li class="media">
+  <img class="mr-3" src="{{ agency.first_image_url }}" width="20%" alt="" />
+  {% load static %}
+  <div class="media-body py-3">
+    <div><img src="{% get_media_prefix %}logos/{{ agency.source}}.png" width="64px"/></div>
+    <a href="{{ agency.link }}">{{ agency.headline }}</a> {{ agency.published }}
+  </div>
+</li>
+{% endfor %}
+</ul>
 
 <h2>Posts</h2>
 <table class="table table-striped">
