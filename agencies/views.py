@@ -81,9 +81,9 @@ def aggregator(request):
                         if Agency.objects.filter(headline=entry.title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                             continue
                         first_image_url = ""
-                            soup = BeautifulSoup(entry.content[0].value, features="html.parser")
-                            if soup.find('img'):
-                                first_image_url = soup.find('img')['src']
+                        soup = BeautifulSoup(entry.content[0].value, features="html.parser")
+                        if soup.find('img'):
+                            first_image_url = soup.find('img')['src']
                         agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, first_image_url=first_image_url, guid=entry.guid)
                         agency.save()
                         agency.politician.add(Politician.objects.get(id=politician['id']) )
