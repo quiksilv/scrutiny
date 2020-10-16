@@ -5,6 +5,7 @@ from politicians.models import Politician
 class Source(models.Model):
     name = models.CharField(max_length=255)
     rss = models.TextField()
+    image = models.ImageField(upload_to="logos", null=True)
     def __str__(self):
         return self.name
 
