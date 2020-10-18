@@ -11,14 +11,22 @@ from hansards.models import Hansard, Paragraph
 from visualizations.views import Visualization
 
 def index(request):
-    results = Constituency.objects.select_related().all()
-    return render(request, 'politicians/index.html', {'results': results} )
+    results = Constituency.objects.select_related().exclude(politician__isnull=True)
+    stats = {}
+    for result in results:
+        agencies_count = Agency.objects.select_related().filter(politician=result.politician_id).count()
+        stats[result.politician_id] = agencies_count
+    return render(request, 'politicians/index.html', {'results': results, 'stats': stats} )
 def search(request):
     term = request.GET.get('term')
     #search by name
     politicians = Politician.objects.filter(Q(name__contains=term) ).values_list('id', flat=True)
     results = Constituency.objects.select_related().filter(politician__in=politicians )
-    return render(request, 'politicians/index.html', {'results': results} )
+    stats = {}
+    for result in results:
+        agencies_count = Agency.objects.select_related().filter(politician=result.politician_id).count()
+        stats[result.politician_id] = agencies_count
+    return render(request, 'politicians/index.html', {'results': results, 'stats': stats} )
 def view(request, name):
     details = {}
     form = PostForm()

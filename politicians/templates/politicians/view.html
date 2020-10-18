@@ -13,13 +13,13 @@
         <div> <a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}">{{ details.wikipedia }}</a> </div>
     </div>
     <div class="col-md-2">
-        {{ details.performance_plot | safe }}
+        <!--img src="data:image/png;base64,{{ details.performance_plot }}" /-->
     </div>
 </div>
 <a class="twitter-timeline" href="https://twitter.com/{{ details.twitter }}" data-tweet-limit="1">Tweets by {{ details.twitter }}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 <h2>Agencies</h2>
 
-<div class="py-3"> {{ details.figure | safe }} </div>
+<img src="data:image/png;base64,{{ details.figure }}" />
 
 <ul class="list-unstyled">
 {% for agency in agencies %}
@@ -34,6 +34,7 @@
 {% endfor %}
 </ul>
 
+{% if user.is_authenticated %}
 <h2>Posts</h2>
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -54,25 +55,6 @@
     </tbody>
 </table>
 
-<h2>Hansards</h2>
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Created</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for hansard in hansards %}
-    <tr>
-       <td> <a href="/hansards/view/{{ hansard.name }}">{{ hansard.name}}</a> </td>
-       <td> {{ hansard.created}} </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-{% if user.is_authenticated %}
 <h2>Write</h2>
 <form action="/posts/add/" method="post">
     {% csrf_token %}

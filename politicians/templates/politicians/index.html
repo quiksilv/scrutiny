@@ -5,14 +5,13 @@
     {% for result in results %}
     <div class="col-sm-5">
       <div class="card" style="width: 15rem;">
-        <!--img class="card-img-top" src={{ result.politician.image_url }} alt="Card image cap"-->
+        <img class="mp-2 card-img-top" src={{ result.politician.image_url }} alt="" width="50%">
         <div class="card-body">
           {% load utils %}
           <h5 class="card-title">{{ result.code }} {{ result.name }}</h5>
           <p class="card-title">{{ result.politician.name | human_readable }}</p>
           <p class="card-text">{{ result.politician.party }}</p>
-          <p class="card-text">News: <span class="badge badge-pill badge-success">0</span> </p>
-          <p class="card-text">Hansard: <span class="badge badge-pill badge-success">0</span> </p>
+          <p class="card-text">News: <span class="badge badge-pill badge-success">{{ stats|get_item:result.politician.id }}</span> </p>
           <a href="/politicians/{{ result.politician.name }}" class="btn btn-primary">More</a>
         </div>
       </div>
