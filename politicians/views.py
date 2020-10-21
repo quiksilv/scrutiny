@@ -1,6 +1,8 @@
 from django.shortcuts import render
-
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+
 from politicians.models import Politician, Constituency, Portfolio
 from politicians.forms import PoliticianForm
 from posts.models import Post
@@ -42,7 +44,17 @@ def view(request, name):
     details['performance_plot'] = Visualization.barchart(objs[0]['id'])
     
     posts = Post.objects.filter(Q(politician__name__contains=name) ).order_by('-created')
-    agencies = Agency.objects.filter(Q(politician__name=name) ).order_by('-created')
+    agencies = Agency.objects.filter(Q(politician__name=name) ).order_by('-published')
+    agencies_paginator = Paginator(agencies, 5)
+    agencies_page_number = request.GET.get('agencies_page')
+
+    try:
+        agencies_page_obj = agencies_paginator.page(agencies_page_number)
+    except PageNotAnInteger:
+        agencies_page_obj = agencies_paginator.page(1)
+    except EmptyPage:
+        agencies_page_obj = agencies_paginator.page(agencies_paginator.num_pages)
+
     hansards = []
     paragraphs = Paragraph.objects.filter(Q(politician__name=name) ).values('hansard').distinct()
     for paragraph in paragraphs:
@@ -50,4 +62,4 @@ def view(request, name):
         hansard = Hansard.objects.get(id=hansard_id)
         hansards.append(hansard)
 
-    return render(request, 'politicians/view.html', {'form': form, 'details': details, 'agencies': agencies, 'posts': posts, 'hansards': hansards})
+    return render(request, 'politicians/view.html', {'form': form, 'details': details, 'agencies': agencies, 'posts': posts, 'hansards': hansards, 'agencies_page_obj': agencies_page_obj})

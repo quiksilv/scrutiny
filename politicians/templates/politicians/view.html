@@ -22,7 +22,7 @@
 <img src="data:image/png;base64,{{ details.figure }}" />
 
 <ul class="list-unstyled">
-{% for agency in agencies %}
+{% for agency in agencies_page_obj %}
 <li class="media">
   <img class="mr-3" src="{{ agency.first_image_url }}" width="20%" alt="" />
   {% load static %}
@@ -33,6 +33,25 @@
 </li>
 {% endfor %}
 </ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if agencies_page_obj.has_previous %}
+            <a href="?agencies_page=1">&laquo; first</a>
+            <a href="?agencies_page={{ agencies_page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ agencies_page_obj.number }} of {{ agencies_page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if agencies_page_obj.has_next %}
+            <a href="?agencies_page={{ agencies_page_obj.next_page_number }}">next</a>
+            <a href="?agencies_page={{ agencies_page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 
 {% if user.is_authenticated %}
 <h2>Posts</h2>
