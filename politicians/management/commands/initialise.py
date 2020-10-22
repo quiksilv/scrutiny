@@ -179,7 +179,7 @@ class Command(BaseCommand):
                 {'name': 'Minister of Education, Science and Technological Research', 'othername': '教育、科学及工艺研究部部长'},
                 {'name': 'Minister of Local Government and Housing', 'othername': '地方政府及房屋部部长'},
                 {'name': 'Minister of Tourism, Art, Culture', 'othername': '旅游、艺术、文化、青年及体育部部长'},
-                {'name': 'Minister of Youth and Sports', 'othername': ''},
+                {'name': 'Minister of Youth and Sports', 'othername': '青年及体育部部长'},
                 {'name': 'Minister of Transport', 'othername': '交通部部长'},
                 {'name': 'Minister of Utilities', 'othername': '乡区电力及水供部部长'},
                 {'name': 'Minister of Welfare, Community Well-being, Women, Family and Childhood Development', 'othername': '福利、社区和谐、妇女、家庭及儿童发展部部长'},
