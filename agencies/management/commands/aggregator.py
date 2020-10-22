@@ -15,22 +15,68 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--init', action='store_true', help='Initialise news sources.')
         parser.add_argument('--rss', action='store_true', help='Run aggregator.')
+        parser.add_argument('--scrap', action='store_true', help='Run scrapper.')
 
     def initialise(self):
         sources = [
-            {'name': 'thestar'          , 'rss': 'https://thestar.com.my/rss/News/Nation'},
-            {'name': 'malaysiakini'     , 'rss': 'https://www.malaysiakini.com/rss/en/news.rss'},
-            {'name': 'freemalaysiatoday', 'rss': 'https://www.freemalaysiatoday.com/rss'},
-            {'name': 'theborneopost'    , 'rss': 'https://www.theborneopost.com/rss'},
-            {'name': 'malaymail'        , 'rss': 'https://www.malaymail.com/feed/rss/malaysia'},
-            {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss'},
-            {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php'},
+            {'name': 'thestar'          , 'rss': 'https://thestar.com.my/rss/News/Nation', 'type': 'agg'},
+            {'name': 'malaysiakini'     , 'rss': 'https://www.malaysiakini.com/rss/en/news.rss', 'type': 'agg'},
+            {'name': 'freemalaysiatoday', 'rss': 'https://www.freemalaysiatoday.com/rss', 'type': 'agg'},
+            {'name': 'theborneopost'    , 'rss': 'https://www.theborneopost.com/rss', 'type': 'agg'},
+            {'name': 'malaymail'        , 'rss': 'https://www.malaymail.com/feed/rss/malaysia', 'type': 'agg'},
+            {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss', 'type': 'agg'},
+            {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php', 'type': 'agg'},
+            {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'}
+            {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'}
         ]
         for obj in sources:
-            Source.objects.get_or_create(name=obj['name'], rss=obj['rss'])
+            if Source.objects.filter(name=obj['name']).count():
+                continue
+            else:
+                Source.objects.create(name=obj['name'], rss=obj['rss'], type=obj['type'])
         self.stdout.write(self.style.SUCCESS('Success adding sources.') )
+    def scrap(self):
+        sources = Source.objects.filter(type="scrap").values('id', 'name', 'rss', 'type')
+        for source in sources:
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            response = requests.get(source['rss'], headers=headers)
+            if response.status_code == 200:
+                self.stdout.write(self.style.SUCCESS(source['rss'] + ' ' + str(response.status_code) ) )
+            else:
+                self.stdout.write(self.style.WARNING(source['rss']+ ' ' + str(response.status_code) ) )
+            soup = BeautifulSoup(response.text, features="html.parser")
+
+            if source['name'] == 'seehua':
+                entries = soup.find_all('div', {'class': 'td-block-span6'})
+
+                politicians = Politician.objects.filter().values('id', 'name', 'othername')
+                for politician in politicians:
+                    politician_name = politician['othername']
+                    if politician_name == "":
+                        continue
+                    for entry in entries:
+                        link = entry.find('a');
+                        sec_response = requests.get(link['href'], headers=headers)
+                        sec_soup = BeautifulSoup(sec_response.text, features="html.parser")
+                        #look into the news item
+                        description = sec_soup.find('div', {'class': 'td-post-content'}).getText()
+                        title = link['title']
+                        published = parser.parse(str(entry.find('time')['datetime']) )
+                        guid = link['href'].split("=")[1]
+                        first_image_url = sec_soup.find('img')['src'] 
+                        #record into the database
+                        if politician_name in title or politician_name in description:
+                            print(politician_name)
+                            #check if already added
+                            if Agency.objects.filter(headline=title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source['name']), guid=guid).count():
+                                agency = Agency.objects.filter(headline=title).update(headline=title, source=Source.objects.get(name=source['name']), published=published, link=link['href'], first_image_url=first_image_url, guid=guid)
+                            else:
+                                agency = Agency.objects.create(headline=title, source=Source.objects.get(name=source['name']), published=published, link=link['href'], first_image_url=first_image_url, guid=guid)
+                                agency.save()
+                                agency.politician.add(Politician.objects.get(id=politician['id']) )
+                
     def rss(self):
-        sources = Source.objects.all().values('id', 'name', 'rss')
+        sources = Source.objects.filter(type="agg").values('id', 'name', 'rss', 'type')
         for source in sources:
             rss = source['rss']
             if hasattr(ssl, '_create_unverified_context'):
@@ -105,3 +151,5 @@ class Command(BaseCommand):
             self.initialise()
         if options['rss']:
             self.rss()
+        if options['scrap']:
+            self.scrap()

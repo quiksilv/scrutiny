@@ -7,6 +7,7 @@ class AgencyAdmin(admin.ModelAdmin):
     list_display = ('headline', 'source', 'guid', 'published')
     date_hierarchy = 'published'
 class SourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'type')
     formfield_overrides = {
         models.ImageField: {'widget': ImageWidget},
     }
