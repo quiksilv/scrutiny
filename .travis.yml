@@ -9,6 +9,7 @@ script:
   - python manage.py migrate
   - python manage.py aggregator --init
   - python manage.py aggregator --rss
+  - python manage.py aggregator --scrap
   - python manage.py initialise --state sarawak
   - python manage.py initialise --state federal
   - python manage.py test
