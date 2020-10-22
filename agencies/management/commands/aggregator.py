@@ -26,8 +26,8 @@ class Command(BaseCommand):
             {'name': 'malaymail'        , 'rss': 'https://www.malaymail.com/feed/rss/malaysia', 'type': 'agg'},
             {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss', 'type': 'agg'},
             {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php', 'type': 'agg'},
-            {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'}
-            {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'}
+            {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'},
+            {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'},
         ]
         for obj in sources:
             if Source.objects.filter(name=obj['name']).count():
