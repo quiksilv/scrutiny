@@ -281,7 +281,7 @@ class Command(BaseCommand):
                 if Politician.objects.filter(name=obj['name']).count():
                     politician = Politician.objects.filter(name=obj['name']).update(image_url=obj['image_url'], party=party, firstname=obj['firstname'], lastname=obj['lastname'], othername=obj['othername'], facebook=obj['facebook'])
                 else:
-                    politician, created = Politician.objects.create(image_url=obj['image_url'], party=party, name=obj['name'], firstname=obj['firstname'], lastname=obj['lastname'], othername=obj['othername'], facebook=obj['facebook'])
+                    politician = Politician.objects.create(image_url=obj['image_url'], party=party, name=obj['name'], firstname=obj['firstname'], lastname=obj['lastname'], othername=obj['othername'], facebook=obj['facebook'])
                     Constituency.objects.filter(name=obj['constituency']).update(politician=politician)
                     if obj['portfolio'] != '':
                         for portfolio in obj['portfolio']:

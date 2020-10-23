@@ -26,7 +26,7 @@ class Command(BaseCommand):
             {'name': 'malaymail'        , 'rss': 'https://www.malaymail.com/feed/rss/malaysia', 'type': 'agg'},
             {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss', 'type': 'agg'},
             {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php', 'type': 'agg'},
-            {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'}
+            {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'},
             {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'}
         ]
         for obj in sources:
@@ -63,10 +63,12 @@ class Command(BaseCommand):
                         title = link['title']
                         published = parser.parse(str(entry.find('time')['datetime']) )
                         guid = link['href'].split("=")[1]
-                        first_image_url = sec_soup.find('img')['src'] 
+                        featuredtag = sec_soup.find('div',{'class': 'td-post-featured-image'})
+                        first_image_url = ""
+                        if featuredtag:
+                            first_image_url = featuredtag.find('img')['src']
                         #record into the database
                         if politician_name in title or politician_name in description:
-                            print(politician_name)
                             #check if already added
                             if Agency.objects.filter(headline=title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(name=source['name']), guid=guid).count():
                                 agency = Agency.objects.filter(headline=title).update(headline=title, source=Source.objects.get(name=source['name']), published=published, link=link['href'], first_image_url=first_image_url, guid=guid)
