@@ -26,6 +26,7 @@ class Command(BaseCommand):
             {'name': 'malaymail'        , 'rss': 'https://www.malaymail.com/feed/rss/malaysia', 'type': 'agg'},
             {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss', 'type': 'agg'},
             {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php', 'type': 'agg'},
+            {'name': 'sinarharian'      , 'rss': 'https://www.sinarharian.com.my/rssFeed/212/65', 'type': 'agg'},
             {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'},
             {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'},
         ]
@@ -108,6 +109,7 @@ class Command(BaseCommand):
                     else:
                         entry.published = parser.parse(str(entry.published) )
                     if source['name'] == "freemalaysiatoday" or source['name'] == "theborneopost" or source['name'] == "malaymail":
+                        #RSS contains content tag
                         if politician_name in entry.title or politician_name in entry.description or politician_name in entry.content[0].value:
                             #check if already added
                             if source['name'] == "malaymail":
@@ -127,6 +129,7 @@ class Command(BaseCommand):
                             agency.save()
                             agency.politician.add(Politician.objects.get(id=politician['id']) )
                     else:
+                        #RSS does not contain content tag
                         if politician_name in entry.title or politician_name in entry.description:
                             if source['name'] == "sebenarnya":
                                 if "https://" in entry.guid:
@@ -134,6 +137,9 @@ class Command(BaseCommand):
                             elif source['name'] == "ukas_sarawak":
                                 if "https://" in entry.link:
                                     entry.guid = entry.link.split("=")[-1]
+                            elif source['name'] == "sinarharian":
+                                if "https://" in entry.link:
+                                    entry.guid = entry.link.split("/")[:4]
                             #check if already added
                             if Agency.objects.filter(headline=entry.title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                                 continue
@@ -145,6 +151,9 @@ class Command(BaseCommand):
                                 soup = BeautifulSoup(response.text, features="html.parser")
                                 news_data = soup.find('td', {'class': 'news_data'})
                                 first_image_url = "https://ukas.sarawak.gov.my" + news_data.find('img')['src']
+                            elif source['name'] == "sinarharian":
+                                first_image_url = entry.image.url
+                            print(entry.title, entry.published, entry.link, first_image_url, entry.guid)
                             agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, first_image_url=first_image_url, guid=entry.guid)
                             agency.save()
                             agency.politician.add(Politician.objects.get(id=politician['id']) )
