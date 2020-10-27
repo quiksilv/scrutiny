@@ -16,16 +16,18 @@ import datetime
 
 def get_wikipedia_statistics(wikipedia, politician):
     stats = Statistics.objects.filter(category='wikipedia', politician=politician).order_by('-created').values('name', 'value')
-    wikipedia['daily_pageview'] = stats[0]['value']
-    timestamp = stats[1]['value']
-    wikipedia['timestamp'] = datetime.datetime.fromtimestamp(timestamp)
+    if stats:
+        wikipedia['daily_pageview'] = stats[0]['value']
+        timestamp = stats[1]['value']
+        wikipedia['timestamp'] = datetime.datetime.fromtimestamp(timestamp)
 
 def get_twitter_statistics(twitter, politician):
     stats = Statistics.objects.filter(category='tweets', politician=politician).order_by('-created').values('name', 'value')
-    twitter['listed_count'] =    stats[0]['value']
-    twitter['tweet_count'] =     stats[1]['value']
-    twitter['following_count'] = stats[2]['value']
-    twitter['followers_count'] = stats[3]['value']
+    if stats:
+        twitter['listed_count'] =    stats[0]['value']
+        twitter['tweet_count'] =     stats[1]['value']
+        twitter['following_count'] = stats[2]['value']
+        twitter['followers_count'] = stats[3]['value']
 
 def index(request):
     results = Constituency.objects.select_related().exclude(politician__isnull=True)
