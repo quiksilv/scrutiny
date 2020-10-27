@@ -14,7 +14,6 @@ class Command(BaseCommand):
             raise Exception(response.status_code, response.text)
         return json.loads(response.text)
     def handle(self, *args, **options):
-        bearer_token = os.environ['TWITTER_API_V2_BEARER_TOKEN']
         headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"}
         if options['all']:
             politicians = Politician.objects.all().values('wikipedia')
@@ -22,11 +21,11 @@ class Command(BaseCommand):
                 if not politician['wikipedia']:
                     continue
                 url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + politician['wikipedia']
-                yesterday = datetime.date.today() + datetime.timedelta(days=-1)
+                yesterday = datetime.date.today() + datetime.timedelta(days=-2)
                 yesterday = yesterday.strftime("%Y%m%d")
-                today = datetime.date.today()
+                today = datetime.date.today() + datetime.timedelta(days=-1)
                 today = today.strftime("%Y%m%d")
-                url2 = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/" + politician['wikipedia'] + "/daily/" + yesterday + "/" + today
+                url2 = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/" + politician['wikipedia'] + "/daily/" + yesterday + "12/" + today + "12"
                 metrics = {}
                 metrics['timestamp'] = parser.parse(str(self.connect_to_endpoint(url, headers)['timestamp']) ).timestamp()
                 metrics['daily_pageview'] = self.connect_to_endpoint(url2, headers)['items'][0]['views']
