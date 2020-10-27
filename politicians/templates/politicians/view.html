@@ -10,10 +10,10 @@
         <div> <h2>{{ details.name | human_readable }}</h2> </div>
         <div> {{ details.highest_education }} </div>
         <ul class="list-group list-group-horizontal-sm">
-            <li class="list-group-item"><a href="https://en.wikipedia.org/wiki/{{ details.wikipedia }}"><img src="/media/logos/wikipedia_icon.png" /></a></li>
+            <li class="list-group-item"><a href="https://en.wikipedia.org/wiki/{{ details.wikipedia.link }}"><img src="/media/logos/wikipedia_icon.png" /></a></li>
             <li class="list-group-item">text: ?</li>
-            <li class="list-group-item">read: ?</li>
-            <li class="list-group-item">last edited</li>
+            <li class="list-group-item">reads/day: {{ details.wikipedia.daily_pageview }}</li>
+            <li class="list-group-item">last edited: {{ details.wikipedia.timestamp }}</li>
         </ul>
         <ul class="list-group list-group-horizontal-sm">
             <li class="list-group-item"><a href="https://facebook.com/{{ details.facebook }}"><img src="/media/logos/facebook_icon.png" /></a></li>
@@ -23,16 +23,16 @@
             <li class="list-group-item">photos/week: ?</li>
         </ul>
         <ul class="list-group list-group-horizontal-sm">
-            <li class="list-group-item"><a href="https://twitter.com/{{ details.twitter }}"><img src="/media/logos/twitter_icon.png" /></a></li>
-            <li class="list-group-item">tweets/week: ?</li>
-            <li class="list-group-item">followers: ?</li>
+            <li class="list-group-item"><a href="https://twitter.com/{{ details.twitter.link }}"><img src="/media/logos/twitter_icon.png" /></a></li>
+            <li class="list-group-item">tweets: {{ details.twitter.tweet_count }}</li>
+            <li class="list-group-item">followers: {{ details.twitter.followers_count }}</li>
             <li class="list-group-item">likes: ?</li>
             <li class="list-group-item">retweets/tweet: ?</li>
         </ul>
     </div>
-    <div class="col-md-2">
+    <!--div class="col-md-2">
         <img src="data:image/png;base64,{{ details.performance_plot }}" />
-    </div>
+    </div-->
 </div>
 <h2>Agencies</h2>
 
