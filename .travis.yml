@@ -12,4 +12,6 @@ script:
   - python manage.py aggregator --scrap
   - python manage.py initialise --state sarawak
   - python manage.py initialise --state federal
+  - python manage.py tweets --all
+  - python manage.py wikipedia --all
   - python manage.py test
