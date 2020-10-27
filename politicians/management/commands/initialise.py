@@ -287,4 +287,5 @@ class Command(BaseCommand):
                         for portfolio in obj['portfolio']:
                             Portfolio.objects.filter(name=portfolio).update(politician=politician)
             self.stdout.write(self.style.SUCCESS('Success adding politicians.') )
-                
+            #sample twitter handle for testing
+            Politician.objects.filter(name=obj['name']).update(twitter='simkuihian')
