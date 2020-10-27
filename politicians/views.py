@@ -9,8 +9,12 @@ from posts.models import Post
 from posts.forms import PostForm
 from agencies.models import Agency
 from hansards.models import Hansard, Paragraph
+from visualizations.models import Statistics
 
 from visualizations.views import Visualization
+
+def get_statistics(politician):
+    return Statistics.objects.filter(category='wikipedia', politician=politician).values('name', 'value').order_by('-created')
 
 def index(request):
     results = Constituency.objects.select_related().exclude(politician__isnull=True)
@@ -42,6 +46,7 @@ def view(request, name):
     details['wikipedia'] = objs[0]['wikipedia']
     details['figure'] = Visualization.mentions(objs[0]['id'])
     details['performance_plot'] = Visualization.barchart(objs[0]['id'])
+    #print(get_statistics(Politician.objects.get(id=objs[0]['id']) ) )
     
     posts = Post.objects.filter(Q(politician__name__contains=name) ).order_by('-created')
     agencies = Agency.objects.filter(Q(politician__name=name) ).order_by('-published')

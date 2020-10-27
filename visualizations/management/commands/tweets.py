@@ -15,7 +15,7 @@ class Command(BaseCommand):
         return json.loads(response.text)
     def handle(self, *args, **options):
         bearer_token = os.environ['TWITTER_API_V2_BEARER_TOKEN']
-        headers = {"Authorization": "Bearer {}".format(bearer_token)}
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36", "Authorization": "Bearer {}".format(bearer_token)}
         if options['test']:
             username = options['test']
             politician = Politician.objects.get(twitter=username)
