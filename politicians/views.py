@@ -15,19 +15,24 @@ from visualizations.views import Visualization
 import datetime
 
 def get_wikipedia_statistics(wikipedia, politician):
-    stats = Statistics.objects.filter(category='wikipedia', politician=politician).order_by('-created').values('name', 'value')
+    stats = Statistics.objects.filter(category='wikipedia', politician=politician).order_by('-created').values('name', 'value')[:4]
     if stats:
-        wikipedia['daily_pageview'] = stats[0]['value']
-        timestamp = stats[1]['value']
+        for stat in stats:
+            wikipedia[stat['name'] ] = stat['value']
+        timestamp = wikipedia['timestamp']
         wikipedia['timestamp'] = datetime.datetime.fromtimestamp(timestamp)
 
 def get_twitter_statistics(twitter, politician):
-    stats = Statistics.objects.filter(category='tweets', politician=politician).order_by('-created').values('name', 'value')
+    stats = Statistics.objects.filter(category='tweets', politician=politician).order_by('-created').values('name', 'value')[:9]
     if stats:
-        twitter['listed_count'] =    stats[0]['value']
-        twitter['tweet_count'] =     stats[1]['value']
-        twitter['following_count'] = stats[2]['value']
-        twitter['followers_count'] = stats[3]['value']
+        for stat in stats:
+            twitter[stat['name'] ] = stat['value']
+        #normalised to total tweets
+        total_tweets = int(twitter['total_tweets'])
+        total_like_count = int(twitter['total_like_count'])
+        total_retweet_count = int(twitter['total_retweet_count'])
+        twitter['like_ratio'] = "{:.2f}".format(total_like_count/total_tweets)
+        twitter['retweet_ratio'] = "{:.2f}".format(total_retweet_count/total_tweets)
 
 def index(request):
     results = Constituency.objects.select_related().exclude(politician__isnull=True)

@@ -24,10 +24,10 @@
         </ul>
         <ul class="list-group list-group-horizontal-sm">
             <li class="list-group-item"><a href="https://twitter.com/{{ details.twitter.link }}"><img src="/media/logos/twitter_icon.png" /></a></li>
-            <li class="list-group-item">tweets: {{ details.twitter.tweet_count }}</li>
+            <li class="list-group-item">tweets: {{ details.twitter.total_tweets }}</li>
             <li class="list-group-item">followers: {{ details.twitter.followers_count }}</li>
-            <li class="list-group-item">likes: ?</li>
-            <li class="list-group-item">retweets/tweet: ?</li>
+            <li class="list-group-item">likes: {{ details.twitter.like_ratio }}</li>
+            <li class="list-group-item">retweets/tweet: {{ details.twitter.retweet_ratio }}</li>
         </ul>
     </div>
     <!--div class="col-md-2">
