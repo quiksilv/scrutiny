@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="mt-2">Sarawak DUN hansards</h1>
+  <div class="card-deck">
+    {% for hansard in hansards %}
+    <div class="col-sm-4">
+      <div class="card" style="width: 15rem;">
+        <img class="mp-2 card-img-top" src="/media/blank.png" alt="" width="50%">
+        <div class="card-body">
+          <h5 class="card-title">{{ hansard.name }}</h5>
+          <a href="/hansards/view/{{ hansard.name }}" class="btn btn-primary">More</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}
