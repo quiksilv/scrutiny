@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1 class="mt-2">Sarawak DUN hansards</h1>
+  <p>Being the official record of debates, the meeting minutes or hansards are transcripts of parliamentary or state legislative assemblies in most Commonwealth countries. DUN Sarawak provides the following hansards but are only available for a month online, therefore it is quite difficult to obtain older records before 2019. If someone out there has there records please let me know via <a href="https://www.reddit.com/r/malaysia/comments/j5ffgo/website_for_rating_ybmppoliticians/">reddit</a> or twitter @quik_silv.</p>
+  <p><a href="https://sinarproject.org/open-parliament">Sinarproject.org</a> started an interesting project that provides access to parliamentary documents including hansards and bills. These documents are in PDF format and would require extra work parsing them to a proper digital format.</p>
+  <p>What I might want to do next is to further process the hansards on this site to enable tagging.</p>
   <div class="card-deck">
     {% for hansard in hansards %}
     <div class="col-sm-4">
