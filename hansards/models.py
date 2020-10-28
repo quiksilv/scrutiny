@@ -8,7 +8,7 @@ class Hansard(models.Model):
     origin = models.CharField(max_length=255)
     url = models.CharField(max_length=255, blank=True)
     raw_file = models.FileField(upload_to="hansards")
-    created = models.DateField()
+    created = models.DateField(auto_now=True)
     def __str__(self):
         return self.name
 class Paragraph(models.Model):
