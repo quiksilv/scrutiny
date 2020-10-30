@@ -27,6 +27,7 @@ class Command(BaseCommand):
             {'name': 'sebenarnya'       , 'rss': 'https://sebenarnya.my/rss', 'type': 'agg'},
             {'name': 'ukas_sarawak'     , 'rss': 'https://ukas.sarawak.gov.my/modules/web/pages/news/rss.php', 'type': 'agg'},
             {'name': 'sinarharian'      , 'rss': 'https://www.sinarharian.com.my/rssFeed/212/65', 'type': 'agg'},
+            {'name': 'orientaldaily'    , 'rss': 'https://www.orientaldaily.com.my/feeds/rss/nation', 'type': 'agg'},
             {'name': 'seehua'           , 'rss': 'http://news.seehua.com/?cat=3', 'type': 'scrap'},
             {'name': 'sinchew_sarawak'  , 'rss': 'https://sarawak.sinchew.com.my/', 'type': 'scrap'},
         ]
@@ -81,6 +82,7 @@ class Command(BaseCommand):
     def rss(self):
         sources = Source.objects.filter(type="agg").values('id', 'name', 'rss', 'type')
         for source in sources:
+            if source == "ukas_sarawak": continue
             rss = source['rss']
             if hasattr(ssl, '_create_unverified_context'):
                 ssl._create_default_https_context = ssl._create_unverified_context
@@ -139,7 +141,7 @@ class Command(BaseCommand):
                                     entry.guid = entry.link.split("=")[-1]
                             elif source['name'] == "sinarharian":
                                 if "https://" in entry.link:
-                                    entry.guid = entry.link.split("/")[:4]
+                                    entry.guid = entry.link.split("/")[4]
                             #check if already added
                             if Agency.objects.filter(headline=entry.title, politician=Politician.objects.get(id=politician['id']), source=Source.objects.get(id=source['id']), guid=entry.guid).count() > 0:
                                 continue
@@ -152,8 +154,8 @@ class Command(BaseCommand):
                                 news_data = soup.find('td', {'class': 'news_data'})
                                 first_image_url = "https://ukas.sarawak.gov.my" + news_data.find('img')['src']
                             elif source['name'] == "sinarharian":
-                                first_image_url = entry.image.url
-                            print(entry.title, entry.published, entry.link, first_image_url, entry.guid)
+                                first_image_url = entry.href
+                            #print(entry.title, entry.published, entry.link, first_image_url, entry.guid)
                             agency = Agency.objects.create(headline=entry.title, source=Source.objects.get(id=source['id']), published=entry.published, link=entry.link, first_image_url=first_image_url, guid=entry.guid)
                             agency.save()
                             agency.politician.add(Politician.objects.get(id=politician['id']) )
