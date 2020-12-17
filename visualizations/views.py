@@ -42,10 +42,10 @@ class Visualization:
         fig, ax = plt.subplots(figsize=(10, 4) )
         mformat = mdates.DateFormatter('%m/%Y')
         ax.xaxis.set_major_formatter(mformat)
-        y, x, _ = ax.hist(xdata)
+        y, x, _ = ax.hist(xdata, 100)
     
         ax.set_xlabel('2020', fontsize=10)
-        ax.set_ylabel('Count', fontsize=10)
+        ax.set_ylabel('Mentions', fontsize=10)
 
         ax.yaxis.set_ticks(np.arange(0, y.max() + 1, 2) )
 
