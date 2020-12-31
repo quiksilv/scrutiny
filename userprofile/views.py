@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -51,6 +51,33 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
-        return HttpResponse('Account activated successfully')
+        return HttpResponse('Account activated successfully.')
     else:
         return render(request, 'registration/account_activation_invalid.html')
+
+def deactivate(request):
+    try:
+        user = User.objects.filter(username=request.user)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None:
+        user.is_active = False
+        user.profile.email_confirmed = False
+        user.save()
+        logout(request)
+        return HttpResponse('Account deactivated.')
+    else:
+        return HttpResponse('Error deactivating user.')
+def delete(request):
+    try:
+        user = User.objects.filter(username=request.user)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None:
+        user.delete()
+        logout(request)
+        return HttpResponse('Account deleted.')
+    else:
+        return HttpResponse('Error deleting user.')
+    
+    
