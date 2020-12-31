@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
+from django.contrib.auth import login, authenticate
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -24,18 +25,17 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request) 
             message = render_to_string('userprofile/acc_active_email.html', {
                 'user':user, 
-                'domain':current_site.domain,
+                'request':request,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            subject = 'Ative sua conta Controller-Gastos'
+            subject = 'Please activate your demokratia.my account'
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(subject, message, to=[to_email])
+            email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, to=[to_email])
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration using the link below<br>' + message)
+            return HttpResponse('Please confirm your email address.')
     else:
         form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form})
