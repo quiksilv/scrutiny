@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<form method="POST">
+    {% csrf_token %}
+    <fieldset>
+        <legend> Join Now </legend>
+        {{ form.as_p }}
+    <fieldset>
+    <div>
+        <button class="btn" type="submit">
+            Sign Up
+        </button>
+    </div>
+</form>
+<div>
+    <small>
+        Already have an account? <a href="#">Sign in</a>
+    </small>
+</div>
+{% endblock %}

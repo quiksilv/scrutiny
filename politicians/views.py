@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render
 
 from politicians.models import Politician, Constituency, Portfolio
 from politicians.forms import PoliticianForm
